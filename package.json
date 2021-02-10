@@ -1,0 +1,28 @@
+{
+	"name": "smart-set",
+	"version": "0.0.1",
+	"author": "Balazs Doka",
+	"description": "A smart set data structure.",
+	"keywords": [ "set", "sets", "smart", "smartset", "data structure", "unique", "id" ],
+	"repository": {
+		"url": "https://github.com/dbalazs97/smart-set",
+		"type": "git"
+	},
+	"homepage": "https://github.com/dbalazs97/smart-set",
+	"license": "MIT",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "tsc",
+		"test": "tsc && jest",
+		"coverage": "tsc && jest --coverage"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.12.13",
+		"@babel/preset-env": "^7.12.13",
+		"@babel/preset-typescript": "^7.12.13",
+		"@types/jest": "^26.0.20",
+		"babel-jest": "^26.6.3",
+		"jest": "^26.6.3"
+	}
+}
