@@ -1,6 +1,6 @@
 {
 	"name": "smart-set",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"author": "Balazs Doka",
 	"description": "A smart set data structure.",
 	"keywords": [ "set", "sets", "smart", "smartset", "data structure", "unique", "id" ],
