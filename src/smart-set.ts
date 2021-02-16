@@ -50,17 +50,17 @@ export class SmartSet<T, ID extends keyof never> extends Set {
 		return this.values();
 	}
 
-	public forEach(callbackfn: (value: T, key: ID, set: SmartSet<T, ID>) => void, thisArg: SmartSet<T, ID> = this): void {
+	public forEach(callbackfn: (value: T, key: T, set: Set<T>) => void, thisArg: any = this): void {
 		for (const [ key, value ] of thisArg.entries()) {
 			callbackfn(value, key, thisArg);
 		}
 	}
 
-	public entries(): IterableIterator<[ ID, T ]> {
-		return Object.keys(this.innerMap).map(key => ([ key, this.innerMap[key] ])).values() as IterableIterator<[ ID, T ]>;
+	public entries(): IterableIterator<[ any, T ]> {
+		return Object.keys(this.innerMap).map(key => ([ key, this.innerMap[key] ])).values() as IterableIterator<[ T, T ]>;
 	}
 
-	public keys(): IterableIterator<ID> {
+	public keys(): IterableIterator<any> {
 		return Object.keys(this.innerMap).values() as IterableIterator<ID>;
 	}
 
@@ -70,5 +70,35 @@ export class SmartSet<T, ID extends keyof never> extends Set {
 
 	public clear(): void {
 		this.innerMap = {} as Record<ID, T>;
+	}
+
+	public union(other: Set<T>): SmartSet<T, ID> {
+		return new SmartSet<T, ID>(this.idFunction, [ ...this.values(), ...other ]);
+	}
+
+	public intersection(other: Set<T>): SmartSet<T, ID> {
+		const returnValue = new SmartSet<T, ID>(this.idFunction);
+		for (const thisValue of this.values()) {
+			for (const otherValue of other.values()) {
+				if (this.idFunction(thisValue) === this.idFunction(otherValue)) {
+					returnValue.add(thisValue);
+				}
+			}
+		}
+		return returnValue;
+	}
+
+	public difference(other: Set<T>): SmartSet<T, ID> {
+		const union = this.union(other);
+		for (const otherValue of other.values()) {
+			union.delete(otherValue);
+		}
+		return union;
+	}
+
+	public symmetricDifference(other: Set<T>): SmartSet<T, ID> {
+		const union = this.union(other);
+		const intersection = this.intersection(other);
+		return union.difference(intersection);
 	}
 }

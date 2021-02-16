@@ -7,8 +7,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/dbalazs97/smart-set)](https://github.com/dbalazs97/smart-set/issues)
 [![GitHub stars](https://img.shields.io/github/stars/dbalazs97/smart-set)](https://github.com/dbalazs97/smart-set/stargazers)
 
-
-SmartSet is a micro-library around set data structure with key arguments.
+SmartSet is a micro-library for creating a smarter set data structure compatible with Set.
 
 ## Install
 
@@ -35,7 +34,7 @@ let { SmartSet } = require("smart-set");
 
 ## Usage
 
-The `SmartSet` class extends the `Set` class, so every member of `Set` is available.
+The `SmartSet` class extends the `Set` class, so every member of `Set` is available, and compatible with the `Set` interface.
 
 ### Constructor
 `SmartSet` has two template paramters: 
@@ -91,6 +90,30 @@ const mySet = new SmartSet<Data, string>(item => item.id, [{ id: 'id1' }, { id: 
 mySet.forEach((value, key, set) => { /* something with the key, value and set */ })
 ```
 
+### Set operations
+
+`SmartSet` has some set operation that corresponds to the mathematics representation. These operations are immutable, so they return a new `SmartSet` instance and does not modify the original set. The methods accept regular `Set` objects, because it runs the ID creation function on the items.
+
+`union(other: Set<T>): SmartSet<T, ID>`
+
+`intersection(other: Set<T>): SmartSet<T, ID>`
+
+`difference(other: Set<T>): SmartSet<T, ID>`
+
+`symmetricDifference(other: Set<T>): SmartSet<T, ID>`
+
+```typescript
+let result;
+const setA = new SmartSet<Data, string>(item => item.s, [ { s: '1' }, { s: '2' } ]);
+const setB = new SmartSet<Data, string>(item => item.s, [ { s: '1' }, { s: '3' } ]);
+
+result = setA.union(setB); //  [ { s: '1' }, { s: '2' }, { s: '3' } ]
+result = setA.intersection(setB); //  [ { s: '1' } ]
+result = setA.difference(setB); //  [ { s: '2' } ]
+result = setB.difference(setA); //  [ { s: '3' } ]
+result = setA.symmetricDifference(setB); //  [ { s: '2' }, { s: '3' } ]
+```
+
 ## Debugging
 
 `npm run build` - Build typescript files
@@ -98,6 +121,10 @@ mySet.forEach((value, key, set) => { /* something with the key, value and set */
 `npm run test` - Run Jest tests
 
 `npm run coverage` - Run code coverage
+
+`npm run lint` - Run EsLint
+
+`npm run lint-fix` - Run EsLint and fix errors
 
 ## Rights and Agreements
 
