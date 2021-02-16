@@ -1,4 +1,4 @@
-export class SmartSet<T, ID extends keyof any> extends Set {
+export class SmartSet<T, ID extends keyof never> extends Set {
 	private innerMap: Record<ID, T> = {} as Record<ID, T>;
 
 	constructor(private idFunction: (item: T) => ID, values?: readonly T[] | null) {
@@ -8,7 +8,7 @@ export class SmartSet<T, ID extends keyof any> extends Set {
 
 	public get size(): number {
 		return Object.keys(this.innerMap).length;
-	};
+	}
 
 	public add(value: T): this {
 		if (!this.has(value)) {
@@ -30,27 +30,27 @@ export class SmartSet<T, ID extends keyof any> extends Set {
 		return delete this.innerMap[id];
 	}
 
-	public has(value: T): boolean {
-		return this.innerMap.hasOwnProperty(this.idFunction(value));
+	public get [Symbol.toStringTag](): string {
+		return 'SmartSet';
 	}
 
-	public hasId(id: ID): boolean {
-		return this.innerMap.hasOwnProperty(id);
+	public has(value: T): boolean {
+		return Object.prototype.hasOwnProperty.call(this.innerMap, this.idFunction(value));
 	}
 
 	public getById(id: ID): T | null {
 		return this.innerMap[id] ?? null;
 	}
 
-	get [Symbol.toStringTag]() {
-		return 'SmartSet';
+	public hasId(id: ID): boolean {
+		return Object.prototype.hasOwnProperty.call(this.innerMap, id);
 	}
 
-	[Symbol.iterator]() {
-		return Object.values(this.innerMap).values();
-	};
+	public [Symbol.iterator](): IterableIterator<T> {
+		return this.values();
+	}
 
-	public forEach(callbackfn: (value: T, key: ID, set: SmartSet<T, ID>) => void, thisArg: SmartSet<T, ID> = this) {
+	public forEach(callbackfn: (value: T, key: ID, set: SmartSet<T, ID>) => void, thisArg: SmartSet<T, ID> = this): void {
 		for (const [ key, value ] of thisArg.entries()) {
 			callbackfn(value, key, thisArg);
 		}
@@ -68,7 +68,7 @@ export class SmartSet<T, ID extends keyof any> extends Set {
 		return Object.keys(this.innerMap).map(key => this.innerMap[key]).values() as IterableIterator<T>;
 	}
 
-	public clear() {
+	public clear(): void {
 		this.innerMap = {} as Record<ID, T>;
 	}
 }
